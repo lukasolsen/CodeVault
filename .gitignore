@@ -1,0 +1,5 @@
+build/
+dist/
+*_source.py
+*.spec
+Obfuscator/

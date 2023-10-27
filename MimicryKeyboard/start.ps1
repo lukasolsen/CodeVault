@@ -1,5 +1,5 @@
 # Define the path to the executable
-$exePath = "C:\Users\%USERNAME%\MimicryKeyboard\dist\main\mimicry_keyboard.exe"
+$exePath = "C:\Users\%USERNAME%\MimicryKeyboard\dist\mimicry_keyboard\mimicry_keyboard.exe"
 
 # Create a registry entry to run the executable on startup
 $registryPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"

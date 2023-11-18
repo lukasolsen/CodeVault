@@ -28,15 +28,19 @@ class Loader:
                         loader = importlib.machinery.SourceFileLoader(
                             module_name, module_path)
                         custom_method_module = loader.load_module()
-                        custom_method = getattr(
-                            custom_method_module, f"{module_name.capitalize()}Method", None)
-                        if custom_method:
-                            self.methods[module_name] = custom_method()
-                            print(colored(messages.get(
-                                'custom_method_loaded').format(method=module_name), 'green'))
-                        else:
-                            print(colored(messages.get(
-                                'invalid_custom_method').format(method=module_name), 'red'))
+
+                        custom_methods = [getattr(custom_method_module, x) for x in dir(
+                            custom_method_module) if x.endswith("Method")]
+
+                        for custom_method in custom_methods:
+                            custom_method_name = custom_method.__name__
+                            if custom_method:
+                                self.methods[custom_method_name] = custom_method()
+                                print(colored(messages.get(
+                                    'custom_method_loaded').format(method=custom_method_name), 'green'))
+                            else:
+                                print(colored(messages.get(
+                                    'invalid_custom_method').format(method=custom_method_name), 'red'))
                     except Exception as e:
                         print(colored(messages.get(
                             'error_loading_custom_method').format(method=module_name, error=str(e)), 'red'))

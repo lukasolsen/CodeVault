@@ -11,7 +11,17 @@ def key_derivation(passphrase: str) -> bytes:
     return sha256.digest()
 
 
-class Custom_encryptionMethod:
+class CustomEncryptionMethod:
+    def encrypt(self, data, key):
+        key_bytes = key_derivation(key)
+        return key_bytes + data
+
+    def decrypt(self, data, key):
+        key_bytes = key_derivation(key)
+        return data[len(key_bytes):]
+
+
+class SecondEncryptionMethod:
     def encrypt(self, data, key):
         key_bytes = key_derivation(key)
         return key_bytes + data

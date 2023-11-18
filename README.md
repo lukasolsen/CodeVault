@@ -9,7 +9,7 @@ Welcome to CodeVault, a collection of powerful and ethical hacking tools designe
 - [Installation](#installation)
 - [Usage](#usage)
 - [Paid Tools](#paid-tools)
-- [Contribution](#contribution)
+- [Documentation](https://vipels-hub.gitbook.io/codevault/)
 - [License](#license)
 
 ## Introduction

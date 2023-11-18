@@ -5,6 +5,7 @@ from utils.messages import messages
 
 from methods.AES import AESMethod
 from methods.Fernet import FernetMethod
+from methods.RSA import RSAMethod
 
 
 class Loader:
@@ -49,6 +50,7 @@ class Loader:
         self.methods = {
             "aes": AESMethod(),
             "fernet": FernetMethod(),
+            "rsa": RSAMethod()
         }
 
     def get_method(self, method_name: str):

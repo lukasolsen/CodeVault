@@ -1,7 +1,9 @@
 messages = {
     "description": "CryptoGuard is a simple encryption/decryption tool.",
 
-    "file_not_found": "[CryptoGuard] Error: File does not exist",
+    "file_not_found": "[CryptoGuard] Error: '{file}' does not exist",
+    "depth_reached": "[CryptoGuard] Warning: Depth {depth} reached, skipping...",
+
     "encryption_method_not_found": "[CryptoGuard] Error: Encryption method '{algorithm}' not found",
     "decryption_method_not_found": "[CryptoGuard] Error: Decryption method '{algorithm}' not found",
     "file_encrypted": "[CryptoGuard] File encrypted successfully",
@@ -19,6 +21,7 @@ messages = {
     "output_option": "[CryptoGuard]   -o, --output\t\t\tReturn output",
     "replace_option": "[CryptoGuard]   -r, --replace\t\t\tReplace original file",
     "key_not_provided": "[CryptoGuard] Error: Key not provided",
+    "default_key": "[CryptoGuard] No key was provided, using default \"secret\" key",
 
     'custom_method_loaded': "[CryptoGuard] Custom method '{method}' loaded successfully",
     'invalid_custom_method': "[CryptoGuard] Error: Invalid custom method '{method}'. Please provide a valid custom method.",

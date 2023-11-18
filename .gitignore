@@ -1,0 +1,19 @@
+build/
+dist/
+*_source.py
+*.spec
+Obfuscator/
+
+MimicryKeyboard/
+Hax4Gamers/
+Hax4Gamers-Safe/
+Hax4Gamers-Server/
+
+# Experiment prank script...
+*TheRiddler*/
+*.pyc
+*Scripts/
+*pyvenv.cfg
+*Lib/
+*Include/
+*.env

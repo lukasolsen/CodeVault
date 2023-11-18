@@ -24,16 +24,8 @@ class CryptoGuard:
         elif args.detect:
             self.runner.detect(args.file)
         else:
-            if args.files:
-                for file in args.files:
-                    if not os.path.isfile(file):
-                        if args.verbose:
-                            print(colored(messages.get(
-                                'file_not_found').format(file=file), 'red'))
-                        return
-
-                files = args.files
-
+            files = self.get_files_from_args(args)
+            if files:
                 if args.encrypt:
                     self.runner.encrypt(files, args.algorithm, options)
                 elif args.decrypt:
@@ -58,9 +50,39 @@ class CryptoGuard:
                             help="Replace original file")
         parser.add_argument("-V", "--verbose", action="store_true",
                             help="Increase output verbosity")
+        parser.add_argument("-depth", "--depth", type=int,
+                            help="Custom depth for folder encryption/decryption")
         parser.add_argument(
             'files', nargs='*', help="Files to be encrypted/decrypted")
         return parser
+
+    def get_files_from_args(self, args):
+        files = []
+        for file in args.files:
+            if os.path.isdir(file):
+                files.extend(self.get_files_from_folder(
+                    file, args.depth or 1, args.verbose))
+            elif os.path.exists(file):
+                files.append(file)
+            else:
+                if args.verbose:
+                    print(colored(messages.get(
+                        'file_not_found').format(file=file), 'red'))
+        return files
+
+    def get_files_from_folder(self, folder, depth, verbose):
+        files = []
+        current_depth = 0
+        for root, dirs, filenames in os.walk(folder):
+            current_depth += 1
+            if current_depth > depth:
+                if verbose:
+                    print(colored(messages.get('depth_reached').format(
+                        depth=depth), 'yellow'))
+                break
+            for filename in filenames:
+                files.append(os.path.join(root, filename))
+        return files
 
 
 if __name__ == '__main__':

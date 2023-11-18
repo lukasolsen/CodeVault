@@ -1,8 +1,7 @@
-import os
 import argparse
-from termcolor import colored
 from runner import Runner
 from utils.messages import messages
+from utils.utils import get_files_from_args
 
 
 class CryptoGuard:
@@ -24,7 +23,7 @@ class CryptoGuard:
         elif args.detect:
             self.runner.detect(args.file)
         else:
-            files = self.get_files_from_args(args)
+            files = get_files_from_args(args)
             if files:
                 if args.encrypt:
                     self.runner.encrypt(files, args.algorithm, options)
@@ -55,34 +54,6 @@ class CryptoGuard:
         parser.add_argument(
             'files', nargs='*', help="Files to be encrypted/decrypted")
         return parser
-
-    def get_files_from_args(self, args):
-        files = []
-        for file in args.files:
-            if os.path.isdir(file):
-                files.extend(self.get_files_from_folder(
-                    file, args.depth or 1, args.verbose))
-            elif os.path.exists(file):
-                files.append(file)
-            else:
-                if args.verbose:
-                    print(colored(messages.get(
-                        'file_not_found').format(file=file), 'red'))
-        return files
-
-    def get_files_from_folder(self, folder, depth, verbose):
-        files = []
-        current_depth = 0
-        for root, dirs, filenames in os.walk(folder):
-            current_depth += 1
-            if current_depth > depth:
-                if verbose:
-                    print(colored(messages.get('depth_reached').format(
-                        depth=depth), 'yellow'))
-                break
-            for filename in filenames:
-                files.append(os.path.join(root, filename))
-        return files
 
 
 if __name__ == '__main__':

@@ -1,5 +1,6 @@
 import os
 
+from typing import List
 try:
     from termcolor import colored
 except ImportError:
@@ -20,39 +21,28 @@ class Runner:
     def __init__(self) -> None:
         self.encryption = Encryption()
 
-    def encrypt(self, file_path, key, algorithm, options) -> None:
+    def encrypt(self, files: List[str], algorithm, options) -> None:
         """Encrypt file"""
-        if not os.path.isfile(file_path):
-            if options.get('verbose'):
-                print(colored(messages.get('file_not_found'), 'red'))
-            return
-
-        if not key:
+        if not options.get("key"):
             if options.get('verbose'):
                 print(colored(messages.get('default_key'), 'yellow'))
 
-        self.encryption.encrypt(
-            file_path, algorithm or 'aes', key or 'secret', replace=options.get('replace'), verbose=options.get('verbose'))
+        for file_path in files:
+            self.encryption.process_file(
+                file_path, algorithm or 'aes', options=options, action='encrypt')
 
-    def decrypt(self, file_path, key: bytes, algorithm, options) -> None:
+    def decrypt(self, files: List[str], algorithm, options) -> None:
         """Decrypt file"""
-        if not os.path.isfile(file_path):
-            if options.get('verbose'):
-                print(colored(messages.get('file_not_found'), 'red'))
-            return
 
-        if not key:
+        if not options.get("key"):
             if options.get('verbose'):
                 print(colored(messages.get('key_not_provided'), 'red'))
             return
 
-        self.encryption.decrypt(
-            file_path, algorithm or 'aes', key, verbose=options.get('verbose'))
+        for file_path in files:
+            self.encryption.process_file(
+                file_path, algorithm or 'aes', options=options, action='decrypt')
 
     def detect(self, file_path) -> None:
         """Detect encryption algorithm"""
-        if not os.path.isfile(file_path):
-            print(colored(messages.get('file_not_found'), 'red'))
-            return
-
         print(self.encryption.detectMethod(file_path))

@@ -1,7 +1,7 @@
 messages = {
     "description": "CryptoGuard is a simple encryption/decryption tool.",
 
-    "file_not_found": "[CryptoGuard] Error: File does not exist",
+    "file_not_found": "[CryptoGuard] Error: '{file}' does not exist",
     "encryption_method_not_found": "[CryptoGuard] Error: Encryption method '{algorithm}' not found",
     "decryption_method_not_found": "[CryptoGuard] Error: Decryption method '{algorithm}' not found",
     "file_encrypted": "[CryptoGuard] File encrypted successfully",

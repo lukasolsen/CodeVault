@@ -19,6 +19,7 @@ messages = {
     "output_option": "[CryptoGuard]   -o, --output\t\t\tReturn output",
     "replace_option": "[CryptoGuard]   -r, --replace\t\t\tReplace original file",
     "key_not_provided": "[CryptoGuard] Error: Key not provided",
+    "default_key": "[CryptoGuard] No key was provided, using default \"secret\" key",
 
     'custom_method_loaded': "[CryptoGuard] Custom method '{method}' loaded successfully",
     'invalid_custom_method': "[CryptoGuard] Error: Invalid custom method '{method}'. Please provide a valid custom method.",

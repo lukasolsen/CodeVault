@@ -11,7 +11,7 @@ except ImportError:
         print("Error: Failed to install termcolor")
         exit()
 
-from modules.encryption import Encryption
+from runner import Runner
 from utils.messages import messages
 
 
@@ -19,22 +19,26 @@ class CryptoGuard:
     """CryptoGuard main class"""
 
     def __init__(self) -> None:
-        self.encryption = Encryption()
+        self.runner = Runner()
 
     def run(self) -> None:
         """Run CryptoGuard with arguments"""
         parser = self.create_parser()
         args = parser.parse_args()
 
+        options = {
+            "replace": args.replace or False,
+            "verbose": args.verbose or False
+        }
+
         if args.version:
             self.version()
         elif args.encrypt:
-            self.encrypt(args.file, args.key, args.algorithm,
-                         args.output, args.replace)
+            self.runner.encrypt(args.file, args.key, args.algorithm, options)
         elif args.decrypt:
-            self.decrypt(args.file, args.key, args.algorithm)
+            self.runner.decrypt(args.file, args.key, args.algorithm, options)
         elif args.detect:
-            self.detect(args.file)
+            self.runner.detect(args.file)
         else:
             parser.print_help()
 
@@ -55,42 +59,12 @@ class CryptoGuard:
         parser.add_argument('-algo', '--algorithm',
                             help="Choose encryption algorithm")
         parser.add_argument('file', help="File to be encrypted/decrypted")
-        parser.add_argument('-o', '--output',
-                            help="Return output")
         parser.add_argument('-r', '--replace', action='store_true',
                             help="Replace original file")
+        parser.add_argument("-V", "--verbose", action="store_true",
+                            help="Increase output verbosity")
 
         return parser
-
-    def encrypt(self, file_path, key, algorithm, output, replace) -> None:
-        """Encrypt file"""
-        if not os.path.isfile(file_path):
-            print(colored(messages.get('file_not_found'), 'red'))
-            return
-
-        self.encryption.encrypt(
-            file_path, algorithm or 'aes', key or 'secret', output=output, replace=replace)
-
-    def decrypt(self, file_path, key: bytes, algorithm) -> None:
-        """Decrypt file"""
-        if not os.path.isfile(file_path):
-            print(colored(messages.get('file_not_found'), 'red'))
-            return
-
-        if not key:
-            print(colored(messages.get('key_not_provided'), 'red'))
-            return
-
-        self.encryption.decrypt(
-            file_path, algorithm or 'aes', key)
-
-    def detect(self, file_path) -> None:
-        """Detect encryption algorithm"""
-        if not os.path.isfile(file_path):
-            print(colored(messages.get('file_not_found'), 'red'))
-            return
-
-        print(self.encryption.detectMethod(file_path))
 
 
 if __name__ == '__main__':

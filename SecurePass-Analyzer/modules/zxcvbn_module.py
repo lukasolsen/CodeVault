@@ -9,6 +9,12 @@ def get_zxcvbn(password: str) -> dict:
         print(
             "Error: zxcvbn is not installed. Please install it using 'pip install zxcvbn-python'")
         os.system("pip install zxcvbn-python")
+        try:
+            import zxcvbn
+        except ImportError:
+            print(
+                "Error: zxcvbn is not installed. Please install it using 'pip install zxcvbn-python'")
+            return {}
 
     zxcvbn_data = zxcvbn.zxcvbn(password)
     return zxcvbn_data

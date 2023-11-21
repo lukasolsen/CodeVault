@@ -1,8 +1,6 @@
 from service.paths import Windows_Paths
 import json
 
-# Load messages from json file:
-
 
 def load_messages() -> dict:
     with open(Windows_Paths.get("messages") + "messages.json", "r") as f:

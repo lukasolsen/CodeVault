@@ -1,17 +1,15 @@
 import os
-from service.messages import load_messages
-from termcolor import colored
+from manager.logger import Logger
 
 
 def get_wordlists(path: str) -> dict:
     # Use os and go around the path to get the wordlists.
     paths = {}
-    messages = load_messages()
 
     for root, dirs, files in os.walk(path):
         for file in files:
-            print(colored(messages.get("loaded_wordlist"), 'green').format(
-                wordlist=file, path=os.path.join(root, file)))
+            Logger().log("loaded_wordlist", {
+                "wordlist": file, "path": os.path.join(root, file)})
 
             paths[file] = {"name": file, "path": os.path.join(
                 root, file), "size": os.path.getsize(os.path.join(root, file))}

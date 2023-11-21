@@ -10,6 +10,7 @@ from service.paths import Windows_Paths
 from datetime import datetime
 
 from manager.logger import Logger
+from modules.wordlist import WordlistDownloader
 
 
 def checker(os_type):
@@ -20,26 +21,7 @@ def checker(os_type):
         if not Path(Windows_Paths.get('wordlist')).exists():
             os.makedirs(Windows_Paths.get('wordlist'), exist_ok=True)
 
-            for wordlist_url in wordlists:
-                wordlist_save_path = Windows_Paths.get(
-                    'wordlist') + wordlist_url.split("/")[-1]
-
-                # print(colored(messages.get("downloading_wordlist").format(
-                #     wordlist=wordlist_url.split("/")[-1], url=wordlist_url
-                # ), 'yellow'))
-                Logger().log("downloading_wordlist", {"wordlist": wordlist_url.split(
-                    "/")[-1], "url": wordlist_url})
-
-                response = requests.get(wordlist_url)
-
-                with open(wordlist_save_path, 'wb') as file:
-                    try:
-                        file.write(response.content)
-                        Logger().log("wordlist_downloaded", {"wordlist": wordlist_url.split(
-                            "/")[-1], "path": wordlist_save_path})
-                    except:
-                        Logger().log("error_downloading_wordlist", {"wordlist": wordlist_url.split(
-                            "/")[-1], "url": wordlist_url})
+            WordlistDownloader().download_wordlists(wordlists)
 
 
 class SecurePass:

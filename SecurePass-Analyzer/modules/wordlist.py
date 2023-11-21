@@ -1,5 +1,8 @@
 import os
 from manager.logger import Logger
+from service.paths import Windows_Paths
+from rich.progress import Progress
+import requests
 
 
 def get_wordlists(path: str) -> dict:
@@ -37,3 +40,36 @@ def word_in_wordlist(word: str, wordlist: str) -> bool:
         return True
     else:
         return False
+
+
+class WordlistDownloader:
+    def __init__(self):
+        self.logger = Logger()
+
+    def download_wordlists(self, wordlists):
+        for wordlist_url in wordlists:
+            wordlist_save_path = Windows_Paths.get(
+                'wordlist') + wordlist_url.split("/")[-1]
+
+            self.logger.log("downloading_wordlist", {"wordlist": wordlist_url.split(
+                "/")[-1], "url": wordlist_url})
+
+            response = requests.get(wordlist_url, stream=True)
+
+            total_size = int(response.headers.get('content-length', 0))
+
+            with open(wordlist_save_path, 'wb') as file, Progress() as progress:
+                task = progress.add_task(
+                    "[cyan]Downloading...", total=total_size)
+                for chunk in response.iter_lines(chunk_size=128, decode_unicode=False):
+                    if chunk:
+                        file.write(chunk)
+                        progress.update(task, advance=len(chunk))
+
+                if progress.tasks[task].completed != progress.tasks[task].total:
+                    progress.update(task, advance=progress.tasks[task].total)
+
+                progress.stop()
+
+            self.logger.log("wordlist_downloaded", {"wordlist": wordlist_url.split(
+                "/")[-1], "path": wordlist_save_path})

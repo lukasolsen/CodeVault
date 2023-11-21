@@ -1,6 +1,6 @@
 from rich.console import Console
-from rich.markdown import Markdown
-from rich.text import Text
+from rich.progress_bar import ProgressBar
+
 from datetime import datetime
 import os
 
@@ -79,6 +79,17 @@ class Logger:
         # Log a json object.
         if self.canLog_to_console:
             self.console.print_json(json.dumps(data, indent=4))
+
+    def log_progress(self, message: str, args: dict, total: int) -> ProgressBar:
+        # Log a progress bar.
+        if message not in self.messages:
+            self.console.print(
+                self.prefix + "[red]Error[/red]: Message not found in messages.json.")
+            return
+
+        if self.canLog_to_console:
+            return self.console.track(
+                self.prefix + message.format(**args), total=total)
 
     def generate_messages(self):
         os.makedirs(Windows_Paths.get("messages"), exist_ok=True)

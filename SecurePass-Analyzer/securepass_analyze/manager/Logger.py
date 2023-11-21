@@ -6,7 +6,6 @@ import os
 
 from service.paths import Windows_Paths
 
-from enum import Enum
 import json
 
 # Message: "[gray]Error[/gray]: {error}"
@@ -98,21 +97,34 @@ class Logger:
         if not os.path.exists(Windows_Paths.get("messages") + "messages.json"):
             with open(Windows_Paths.get("messages") + "messages.json", 'w') as f:
                 messages = {
-                    "description": "SecurePass-Analyzer is a password analyzer that analyzes the strength of a password and gives suggestions for improvement.",
+                    # General
+                    "description": "[cyan]SecurePass Analyzer[/cyan] assesses password strength, providing improvement suggestions.",
 
-                    "loaded_wordlist": "Loaded wordlist: '{wordlist}' from '{path}'",
-                    "error_loading_wordlist": "Error: Could not load wordlist: '{wordlist}' from '{path}'",
-                    "downloading_wordlist": "Downloading wordlist: '{wordlist}' from '{url}'",
-                    "error_downloading_wordlist": "Error: Could not download wordlist: '{wordlist}' from '{url}'",
-                    "wordlist_downloaded": "Wordlist: '{wordlist}' downloaded to '{path}'",
+                    # Report Generation
+                    "generating_report": "[cyan]Generating report[/cyan] for password '[green]{password}'[reset]...",
+                    "report_generated": "Report generated for password '[green]{password}'[reset] - [bright_black]{timestamp}[reset].",
+                    "error_generating_report": "[red]Error:[/red] Unable to generate report for password '[green]{password}'[reset].",
 
-                    "generating_report": "Generating report for password: '{password}'",
-                    "report_generated": "Report generated for password: '{password}' - {timestamp}",
-                    "error_generating_report": "Error: Could not generate report for password: '{password}'",
+                    # Password Generation
+                    "generating_password": "[cyan]Generating password[/cyan] with options: [yellow]{options}[reset]...",
+                    "password_generated": "Password generated: '[green]{password}'[reset].",
+                    "error_generating_password": "[red]Error:[/red] Unable to generate password.",
 
-                    "generating_password": "Generating password with the following options: {options}",
-                    "password_generated": "Password generated: '{password}'",
-                    "error_generating_password": "Error: Could not generate password",
+                    # Wordlists
+                    "wordlist_loaded": "Wordlist '[yellow]{wordlist}'[reset] loaded from '[bright_black]{path}[reset]'.",
+                    "error_loading_wordlist": "[red]Error:[/red] Unable to load wordlist '[yellow]{wordlist}'[reset] from '[bright_black]{path}[reset]'.",
+                    "wrong_extension_wordlist": "[red]Error:[/red] Wrong extension of wordlist '[yellow]{wordlist}'[reset]. Only '.txt' is supported. Skipping wordlist.",
+                    "downloading_wordlist": "[cyan]Downloading wordlist[/cyan] '[yellow]{wordlist}'[reset] from '[bright_black]{url}[reset]'...",
+                    "error_downloading_wordlist": "[red]Error:[/red] Unable to download wordlist '[yellow]{wordlist}'[reset] from '[bright_black]{url}[reset]'.",
+                    "wordlist_downloaded": "Wordlist '[yellow]{wordlist}'[reset] downloaded to '[bright_black]{path}[reset]'.",
+
+                    # Policies
+                    "policy_loaded": "Policy '[blue]{policy}'[reset] loaded from '[bright_black]{path}[reset]'.",
+                    "error_loading_policy": "[red]Error:[/red] Unable to load policy '[blue]{policy}'[reset] from '[bright_black]{path}[reset]'.",
+                    "downloading_policy": "[cyan]Downloading policy[/cyan] '[blue]{policy}'[reset] from '[bright_black]{url}[reset]'...",
+                    "error_downloading_policy": "[red]Error:[/red] Unable to download policy '[blue]{policy}'[reset] from '[bright_black]{url}[reset]'.",
+                    "policy_downloaded": "Policy '[blue]{policy}'[reset] downloaded to '[bright_black]{path}[reset]'."
+
                 }
 
                 json.dump(messages, f, indent=4)

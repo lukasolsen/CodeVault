@@ -1,5 +1,5 @@
 import os
-from manager.logger import Logger
+from manager.Logger import Logger
 from service.paths import Windows_Paths
 from rich.progress import Progress
 import requests
@@ -11,7 +11,13 @@ def get_wordlists(path: str) -> dict:
 
     for root, dirs, files in os.walk(path):
         for file in files:
-            Logger().log("loaded_wordlist", {
+            # Check if correct extension
+            if not file.endswith(".txt"):
+                Logger().log(
+                    "wrong_extension_wordlist", {"wordlist": file})
+                continue
+
+            Logger().log("wordlist_loaded", {
                 "wordlist": file, "path": os.path.join(root, file)})
 
             paths[file] = {"name": file, "path": os.path.join(
@@ -29,7 +35,6 @@ def get_wordlist(path: str) -> str:
         with open(path, 'r', encoding='utf-8') as file:
             wordlist = file.read()
     except:
-        print("asdasdsd")
         wordlist = ""
     return wordlist
 
@@ -40,6 +45,11 @@ def word_in_wordlist(word: str, wordlist: str) -> bool:
         return True
     else:
         return False
+
+
+class WordlistManager:
+    def __init__(self) -> None:
+        self
 
 
 class WordlistDownloader:

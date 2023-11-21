@@ -1,14 +1,15 @@
 from service.utils import calculate_case_factor, calculate_length_factor, calculate_total_score, contains_digit, contains_special_char, determine_rating, calculate_entropy
-from service.generator import _generate_strong_password, generate_suggestions
+from service.generator import generate_suggestions
 from modules.wordlist import get_wordlists, get_wordlist, word_in_wordlist
-
+from manager.Policies import Policies
 from service.paths import Windows_Paths
+from datetime import datetime
 
 
 class PasswordAnalyzer:
     def __init__(self) -> None:
         self.wordlists = get_wordlists(Windows_Paths.get('wordlist'))
-        pass
+        self.policies = Policies().get_policies(Windows_Paths.get('policy'))
 
     def analyze(self, password: str, options: dict) -> dict:
         length_factor = calculate_length_factor(password)
@@ -25,19 +26,13 @@ class PasswordAnalyzer:
         suggestions = generate_suggestions(
             length_factor, uppercase_factor, lowercase_factor, digit_factor, special_char_factor)
 
-        # Default is OK, when something bad is found, then change to either Critical, or Warning.
-        status = "OK"
-        wordlist_information = {}
+        status, wordlist_information = self.check_wordlists(
+            password)
 
-        for wordlist in self.wordlists.values():
-            wordlist_data = get_wordlist(wordlist.get("path"))
-            if word_in_wordlist(password, wordlist_data):
-                status = "Critical"
-                wordlist_information[wordlist.get("name")] = {
-                    "status": "Found",
-                    "wordlist": wordlist.get("name"),
-                    "message": "The password was found in the wordlist"
-                }
+        if status == "OK":
+            status, policy_information = self.check_policies(password)
+        else:
+            policy_information = self.check_policies(password)[1]
 
         results = {
             "password": password,
@@ -52,6 +47,8 @@ class PasswordAnalyzer:
             },
             "entropy": calculate_entropy(password),
             "wordlist": wordlist_information,
+            "policy": policy_information,
+            "timestamp": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
         }
 
         if options.get('zxcvbn', False):
@@ -61,9 +58,34 @@ class PasswordAnalyzer:
 
         return results
 
-    def generate_strong_passwords(self, password: str, count: int = 5) -> list:
-        strong_passwords = []
-        for _ in range(count):
-            new_password = _generate_strong_password(password)
-            strong_passwords.append(new_password)
-        return strong_passwords
+    def check_wordlists(self, password: str) -> tuple:
+        status = "OK"
+        wordlist_information = {}
+
+        for wordlist in self.wordlists.values():
+            wordlist_data = get_wordlist(wordlist.get("path"))
+            if word_in_wordlist(password, wordlist_data):
+                status = "Critical"
+                wordlist_information[wordlist.get("name")] = {
+                    "status": "Found",
+                    "wordlist": wordlist.get("name"),
+                    "message": "The password was found in the wordlist"
+                }
+
+        return status, wordlist_information
+
+    def check_policies(self, password: str) -> tuple:
+        status = "OK"
+        policy_information = {}
+
+        for policy in self.policies.values():
+            if not Policies().validate_password(password, policy.get("content")):
+
+                status = "Critical"
+                policy_information[policy.get("name")] = {
+                    "status": "Failed",
+                    "policy": policy.get("name"),
+                    "message": "The password does not meet the policy requirements"
+                }
+
+        return status, policy_information

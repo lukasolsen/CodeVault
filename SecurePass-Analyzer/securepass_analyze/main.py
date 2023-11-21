@@ -1,7 +1,6 @@
 import argparse
 import os
 from pathlib import Path
-import requests
 import json
 
 from service.generator import generate_password
@@ -9,7 +8,7 @@ from analyzer import PasswordAnalyzer
 from service.paths import Windows_Paths
 from datetime import datetime
 
-from manager.logger import Logger
+from manager.Logger import Logger
 from modules.wordlist import WordlistDownloader
 
 
@@ -23,6 +22,9 @@ def checker(os_type):
 
             WordlistDownloader().download_wordlists(wordlists)
 
+        if not Path(Windows_Paths.get('policy')).exists():
+            os.makedirs(Windows_Paths.get('policy'), exist_ok=True)
+
 
 class SecurePass:
     def __init__(self) -> None:
@@ -30,7 +32,7 @@ class SecurePass:
 
     def create_parser(self) -> argparse.ArgumentParser:
         parser = argparse.ArgumentParser(
-            add_help=True, usage="securepassanalyzer [options]", epilog="Use 'cryptoguard --help' for usage information.", formatter_class=argparse.RawTextHelpFormatter)
+            add_help=True, usage="securepass [options]", epilog="Use 'securepass --help' for usage information.", formatter_class=argparse.RawTextHelpFormatter)
         parser.add_argument('-v', '--version', action='store_true',
                             help="Show version number and exit")
 

@@ -9,26 +9,11 @@ from service.paths import Windows_Paths
 from datetime import datetime
 
 from manager.Logger import Logger
-from modules.wordlist import WordlistDownloader
-
-
-def checker(os_type):
-    wordlists = ["https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt",
-                 "https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/10-million-password-list-top-1000000.txt"]
-
-    if os_type == 'nt':
-        if not Path(Windows_Paths.get('wordlist')).exists():
-            os.makedirs(Windows_Paths.get('wordlist'), exist_ok=True)
-
-            WordlistDownloader().download_wordlists(wordlists)
-
-        if not Path(Windows_Paths.get('policy')).exists():
-            os.makedirs(Windows_Paths.get('policy'), exist_ok=True)
 
 
 class SecurePass:
     def __init__(self) -> None:
-        checker(os.name)
+        pass
 
     def create_parser(self) -> argparse.ArgumentParser:
         parser = argparse.ArgumentParser(

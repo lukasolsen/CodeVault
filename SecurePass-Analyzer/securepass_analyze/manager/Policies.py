@@ -2,10 +2,14 @@ import os
 import json
 from manager.Logger import Logger
 
+from service.paths import Windows_Paths
+from pathlib import Path
+
 
 class Policies:
     def __init__(self) -> None:
-        pass
+        if not Path(Windows_Paths.get('policy')).exists():
+            os.makedirs(Windows_Paths.get('policy'), exist_ok=True)
 
     def get_policies(self, path: str) -> dict:
         policies = {}

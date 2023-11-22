@@ -64,3 +64,21 @@ class Policies:
             return False
 
         return True
+
+    def generate_policy(self, password: str) -> dict:
+        # We get a password, now this password is simply going to not be allowed, grab things such as length, uppercase, lowercase, digits, special characters
+        # and generate a policy that will not allow this password to be used again
+        hasUppercaseLetters = password.isupper()
+        hasLowercaseLetters = password.islower()
+        hasDigits = password.isdigit()
+        hasSpecialCharacters = not password.isalnum()
+
+        policy = {
+            "min_length": len(password),
+            "require_uppercase": hasUppercaseLetters,
+            "require_lowercase": hasLowercaseLetters,
+            "require_digit": hasDigits,
+            "require_special_char": hasSpecialCharacters
+        }
+
+        return policy

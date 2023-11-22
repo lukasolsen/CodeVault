@@ -1,14 +1,24 @@
-from rich.console import Console
-from rich.progress_bar import ProgressBar
+import os
+
+try:
+
+    from rich.console import Console
+    from rich.progress_bar import ProgressBar
+except:
+    os.system("pip install rich")
+    try:
+        from rich.console import Console
+        from rich.progress_bar import ProgressBar
+    except:
+        print("Unable to install rich. Please install manually.")
+        exit(0)
 
 from datetime import datetime
-import os
+
 
 from service.paths import Windows_Paths
 
 import json
-
-# Message: "[gray]Error[/gray]: {error}"
 
 
 class Logger:

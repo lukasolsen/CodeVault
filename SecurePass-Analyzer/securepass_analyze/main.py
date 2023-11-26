@@ -1,7 +1,6 @@
 import argparse
 import os
 from pathlib import Path
-import requests
 import json
 
 from service.generator import generate_password
@@ -9,28 +8,16 @@ from analyzer import PasswordAnalyzer
 from service.paths import Windows_Paths
 from datetime import datetime
 
-from manager.logger import Logger
-from modules.wordlist import WordlistDownloader
-
-
-def checker(os_type):
-    wordlists = ["https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt",
-                 "https://raw.githubusercontent.com/danielmiessler/SecLists/master/Passwords/Common-Credentials/10-million-password-list-top-1000000.txt"]
-
-    if os_type == 'nt':
-        if not Path(Windows_Paths.get('wordlist')).exists():
-            os.makedirs(Windows_Paths.get('wordlist'), exist_ok=True)
-
-            WordlistDownloader().download_wordlists(wordlists)
+from manager.Logger import Logger
 
 
 class SecurePass:
     def __init__(self) -> None:
-        checker(os.name)
+        pass
 
     def create_parser(self) -> argparse.ArgumentParser:
         parser = argparse.ArgumentParser(
-            add_help=True, usage="securepassanalyzer [options]", epilog="Use 'cryptoguard --help' for usage information.", formatter_class=argparse.RawTextHelpFormatter)
+            add_help=True, usage="securepass [options]", epilog="Use 'securepass --help' for usage information.", formatter_class=argparse.RawTextHelpFormatter)
         parser.add_argument('-v', '--version', action='store_true',
                             help="Show version number and exit")
 

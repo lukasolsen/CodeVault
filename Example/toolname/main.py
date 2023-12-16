@@ -49,4 +49,6 @@ class ExampleClass:
 if __name__ == "__main__":
     Logger().log("description")
     Logger().log_logfile("This is a super secret message")
+    Logger().log_table(columns=["Name", "Author"], rows=[
+        ["Example", "Example Author"], ["Example 2", "Example Author"]])
     ExampleClass().run()

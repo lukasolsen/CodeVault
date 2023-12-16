@@ -8,12 +8,14 @@ try:
     from rich.console import Console
     from rich.progress_bar import ProgressBar
     from rich.progress import Progress
+    from rich.table import Table
 except ImportError:
     os.system("pip install rich")
     try:
         from rich.console import Console
         from rich.progress_bar import ProgressBar
         from rich.progress import Progress
+        from rich.table import Table
     except ImportError:
         print("Unable to install rich. Please install manually.")
         exit(0)
@@ -123,6 +125,22 @@ class Logger:
             transient=True
         )
         return progress.add_task("progress", total=total)
+
+    def log_table(self, columns: list, rows: list, title: str = None) -> None:
+        """
+        Log a table to the console.
+
+        Args:
+            columns (list): The columns of the table.
+            rows (list): The rows of the table.
+            title (str, optional): The title of the table. Defaults to None.
+        """
+        table = Table(title=title or "CodeVault's Table")
+        for column in columns:
+            table.add_column(column)
+        for row in rows:
+            table.add_row(*row)
+        self.console.print(table)
 
     def __dir__(self):
         """

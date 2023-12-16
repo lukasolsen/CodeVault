@@ -1,0 +1,4 @@
+prefix: "[gray][[blue]Example Code[/blue]][/gray][reset] "
+
+description: "[cyan]Example Code[/cyan] assesses the quality of your code."
+example_command: "[cyan]Example Code[/cyan] [blue]example[/blue] [green]--help[/green]"

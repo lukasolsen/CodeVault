@@ -1,0 +1,13 @@
+name: "Example"
+version: "0.0.1"
+author: "Example Author"
+
+paths:
+  windows:
+    messages: "%PROGRAMDATA%/Example/locales/"
+
+  linux:
+    messages: "/usr/share/Example/locales/"
+
+  mac:
+    messages: "/Library/Application Support/Example/locales/"

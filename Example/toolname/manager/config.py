@@ -8,9 +8,6 @@ class InitializeManager:
     def __init__(self) -> None:
         self.main_path = os.path.join(
             os.getenv("PROGRAMDATA"), "Example")
-        self.github_repo = "https://github.com/lukasolsen/CodeVault.git"
-        self.locales_repo_path = os.path.join(
-            self.main_path, 'Example/data/locales')
 
     def initialize(self) -> None:
         os.makedirs(self.main_path, exist_ok=True)
@@ -23,8 +20,7 @@ class InitializeManager:
         # Locales
         locales_path = os.path.join(self.main_path, 'locales')
         if not os.path.exists(locales_path):
-            self.clone_locales_repo()
-            self.copy_locales(locales_path)
+            self.create_locales()
 
     def config(self, path: str) -> None:
         """Create a config file."""
@@ -50,22 +46,24 @@ class InitializeManager:
         with open(path, 'w') as f:
             yaml.dump(default_config, f, default_flow_style=False)
 
-    def clone_locales_repo(self) -> None:
-        """Clone the locales repository."""
-        try:
-            subprocess.run(['git', 'clone', self.github_repo,
-                           self.locales_repo_path], check=True)
-        except subprocess.CalledProcessError as e:
-            print(f"Error cloning locales repository: {e}")
+    def create_locales(self) -> None:
+        """Create the locales directory."""
+        os.makedirs(os.path.join(self.main_path, 'locales'), exist_ok=True)
 
-    def copy_locales(self, path: str) -> None:
-        """Copy locales folder from the cloned repository."""
-        locales_repo_path = os.path.join(self.locales_repo_path, 'locales')
+        prefix = "[gray][[blue]Example Code[/blue]][/gray][reset] "
 
-        try:
-            shutil.copytree(locales_repo_path, path)
-        except shutil.Error as e:
-            print(f"Error copying locales: {e}")
+        # Create the default locale
+        self.write_locale('en_US', {
+            "prefix": prefix,
+
+            "description": "[cyan]Example Code[/cyan] assesses the quality of your code.",
+            "example_command": "[cyan]Example Code[/cyan] [blue]example[/blue] [green]--help[/green]",
+        })
+
+    def write_locale(self, locale: str, data: str) -> None:
+        """Write a locale file."""
+        with open(os.path.join(self.main_path, 'locales', locale + '.yml'), 'w') as f:
+            yaml.dump(data, f, default_flow_style=False)
 
 
 class ConfigurationManager:

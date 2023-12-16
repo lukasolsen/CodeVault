@@ -1,6 +1,6 @@
 from manager.logger import Logger
 import argparse
-from manager.config import get_version
+from manager.config import ConfigurationManager
 
 
 class ExampleClass:
@@ -43,9 +43,9 @@ class ExampleClass:
         args = parser.parse_args()
 
         if args.version:
-            print(get_version())
+            print(ConfigurationManager().get_version())
 
 
 if __name__ == "__main__":
-    Logger().log_progress("progress", "Example", 100)
+    Logger().log("description")
     ExampleClass().run()

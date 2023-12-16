@@ -1,7 +1,7 @@
 import yaml
 import os
 import locale
-from manager import config
+from manager.config import ConfigurationManager
 
 
 class Locale:
@@ -33,13 +33,13 @@ class Locale:
         Sets the default locale, loads the corresponding YAML file, and initializes locale data.
         """
         if not self.__initialized:
-            self.locale_ = "en_US"
+            self.locale_ = ConfigurationManager().get_locale() or "en_US"
             self.locale_data = None
             locale.setlocale(locale.LC_ALL, self.locale_)
 
             # Load en_US.yml file from manager/locales/en_US.yml
-            if os.path.exists(f"{config.get_path('messages')}{self.locale_}.yml"):
-                with open(f"{config.get_path('messages')}{self.locale_}.yml", "r") as f:
+            if os.path.exists(f"{ConfigurationManager().get_path('messages')}{self.locale_}.yml"):
+                with open(f"{ConfigurationManager().get_path('messages')}{self.locale_}.yml", "r") as f:
                     self.locale_data = yaml.safe_load(f)
 
             self.__initialized = True
@@ -55,8 +55,8 @@ class Locale:
         """
         self.locale_ = locale_
 
-        if os.path.exists(f"{config.get_path('messages')}{locale_}.yml"):
-            with open(f"{config.get_path('messages')}{locale_}.yml", "r") as f:
+        if os.path.exists(f"{ConfigurationManager().get_path('messages')}{locale_}.yml"):
+            with open(f"{ConfigurationManager().get_path('messages')}{locale_}.yml", "r") as f:
                 self.locale_data = yaml.safe_load(f)
 
         locale.setlocale(locale.LC_ALL, locale_)

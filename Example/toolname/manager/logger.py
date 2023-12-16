@@ -1,19 +1,18 @@
 import os
 import json
 from datetime import datetime
-from rich.console import Console
-from rich.progress_bar import ProgressBar
-from rich.progress import Progress
 from manager.locale import _, Locale
 
 try:
     from rich.console import Console
     from rich.progress_bar import ProgressBar
+    from rich.progress import Progress
 except ImportError:
     os.system("pip install rich")
     try:
         from rich.console import Console
         from rich.progress_bar import ProgressBar
+        from rich.progress import Progress
     except ImportError:
         print("Unable to install rich. Please install manually.")
         exit(0)

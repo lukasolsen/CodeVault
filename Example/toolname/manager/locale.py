@@ -23,7 +23,6 @@ class Locale:
         """
         if not cls._instance:
             cls._instance = super(Locale, cls).__new__(cls)
-            cls._instance.__initialized = False
         return cls._instance
 
     def __init__(self) -> None:
@@ -32,17 +31,14 @@ class Locale:
 
         Sets the default locale, loads the corresponding YAML file, and initializes locale data.
         """
-        if not self.__initialized:
-            self.locale_ = ConfigurationManager().get_locale() or "en_US"
-            self.locale_data = None
-            locale.setlocale(locale.LC_ALL, self.locale_)
+        self.locale_ = ConfigurationManager().get_locale() or "en_US"
+        self.locale_data = None
+        locale.setlocale(locale.LC_ALL, self.locale_)
 
-            # Load en_US.yml file from manager/locales/en_US.yml
-            if os.path.exists(f"{ConfigurationManager().get_path('messages')}{self.locale_}.yml"):
-                with open(f"{ConfigurationManager().get_path('messages')}{self.locale_}.yml", "r") as f:
-                    self.locale_data = yaml.safe_load(f)
-
-            self.__initialized = True
+        # Load en_US.yml file from manager/locales/en_US.yml
+        if os.path.exists(f"{ConfigurationManager().get_path('messages')}{self.locale_}.yml"):
+            with open(f"{ConfigurationManager().get_path('messages')}{self.locale_}.yml", "r") as f:
+                self.locale_data = yaml.safe_load(f)
 
     def set_locale(self, locale_="en_US"):
         """

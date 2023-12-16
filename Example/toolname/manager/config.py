@@ -1,13 +1,12 @@
 import os
 import yaml
-import subprocess
-import shutil
 
 
 class InitializeManager:
     def __init__(self) -> None:
+        self.name = "Example"
         self.main_path = os.path.join(
-            os.getenv("PROGRAMDATA"), "Example")
+            os.getenv("PROGRAMDATA"), "CodeVault/" + self.name)
 
     def initialize(self) -> None:
         os.makedirs(self.main_path, exist_ok=True)
@@ -22,21 +21,29 @@ class InitializeManager:
         if not os.path.exists(locales_path):
             self.create_locales()
 
+        # Logs
+        logs_path = os.path.join(self.main_path, 'logs')
+        if not os.path.exists(logs_path):
+            os.makedirs(logs_path, exist_ok=True)
+
     def config(self, path: str) -> None:
         """Create a config file."""
         default_config = {
-            "name": "Example",
+            "name": self.name,
             "version": "1.0.0",
             "author": "Example Author",
             "paths": {
                 "windows": {
-                    "messages": "%PROGRAMDATA%/Example/locales/",
+                    "messages": "%PROGRAMDATA%/CodeVault/Example/locales/",
+                    "logs": "%PROGRAMDATA%/CodeVault/Example/logs/",
                 },
                 "linux": {
-                    "messages": "/usr/share/locales/",
+                    "messages": "/usr/share/CodeVault/locales",
+                    "logs": "/var/log/CodeVault/Example",
                 },
                 "mac": {
-                    "messages": "/usr/local/share/locales/",
+                    "messages": "/usr/local/share/CodeVault/locales/",
+                    "logs": "/var/log/CodeVault/Example/",
                 }
             },
             "locale": "en_US",
@@ -77,15 +84,13 @@ class ConfigurationManager:
             return cls._instance
 
     def __init__(self) -> None:
-        if not hasattr(self, 'initialized'):
-            self.initialized = True
-            InitializeManager().initialize()
+        InitializeManager().initialize()
 
-            self.data = None
-            self.path = os.path.join(
-                os.getenv("PROGRAMDATA"), "Example")
+        self.data = None
+        self.path = os.path.join(
+            os.getenv("PROGRAMDATA"), "CodeVault/Example")
 
-            self.load()
+        self.load()
 
     def load(self) -> None:
         os.makedirs(self.path, exist_ok=True)

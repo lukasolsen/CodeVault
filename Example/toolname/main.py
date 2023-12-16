@@ -48,4 +48,5 @@ class ExampleClass:
 
 if __name__ == "__main__":
     Logger().log("description")
+    Logger().log_logfile("This is a super secret message")
     ExampleClass().run()

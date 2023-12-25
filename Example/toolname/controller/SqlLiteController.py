@@ -1,4 +1,6 @@
 import sqlite3
+import os
+from contextlib import contextmanager
 
 
 class SqlLiteController:
@@ -12,8 +14,9 @@ class SqlLiteController:
             return cls._instance
 
     def __init__(self) -> None:
-        pass
+        self.connection = None
 
+    @contextmanager
     def connect(self, path: str) -> sqlite3.Connection:
         """
         Connect to a SQLite database.
@@ -25,7 +28,34 @@ class SqlLiteController:
             sqlite3.Connection: The SQLite connection.
         """
         self.connection = sqlite3.connect(path)
-        return self.connection
+        try:
+            yield self.connection
+        finally:
+            self.close()
+
+    def execute_query(self, query: str, parameters: tuple = None):
+        """
+        Execute a SQL query.
+
+        Args:
+            query (str): The SQL query.
+            parameters (tuple, optional): Parameters for the query. Defaults to None.
+
+        Returns:
+            sqlite3.Cursor: The cursor object.
+        """
+        if not self.connection:
+            raise RuntimeError(
+                "SQLite connection not established. Call connect() first.")
+
+        cursor = self.connection.cursor()
+
+        if parameters:
+            cursor.execute(query, parameters)
+        else:
+            cursor.execute(query)
+
+        return cursor
 
     def execute_query(self, query: str, parameters: tuple = None):
         """
@@ -82,6 +112,50 @@ class SqlLiteController:
         result = cursor.fetchall()
         cursor.close()
         return result
+
+    def fetch_many(self, query: str, size: int, parameters: tuple = None):
+        """
+        Fetch a specified number of results from a SQL query.
+
+        Args:
+            query (str): The SQL query.
+            size (int): The number of results to fetch.
+            parameters (tuple, optional): Parameters for the query. Defaults to None.
+
+        Returns:
+            list: List of result tuples.
+        """
+        cursor = self.execute_query(query, parameters)
+        result = cursor.fetchmany(size)
+        cursor.close()
+        return result
+
+    def execute_script(self, script: str):
+        """
+        Execute a SQL script.
+
+        Args:
+            script (str): The SQL script.
+        """
+        if not self.connection:
+            raise RuntimeError(
+                "SQLite connection not established. Call connect() first.")
+
+        self.connection.executescript(script)
+
+    def executemany(self, query: str, parameters: list):
+        """
+        Execute a SQL query multiple times.
+
+        Args:
+            query (str): The SQL query.
+            parameters (list): List of parameters for the query.
+        """
+        if not self.connection:
+            raise RuntimeError(
+                "SQLite connection not established. Call connect() first.")
+
+        self.connection.executemany(query, parameters)
 
     def commit(self):
         """Commit changes to the database."""

@@ -38,12 +38,12 @@ class InitializeManager:
                     "logs": "%PROGRAMDATA%/CodeVault/Example/logs/",
                 },
                 "linux": {
-                    "messages": "/usr/share/CodeVault/locales",
-                    "logs": "/var/log/CodeVault/Example",
+                    "messages": "/usr/share/CodeVault/Example/locales",
+                    "logs": "/var/log/CodeVault/Example/logs/",
                 },
                 "mac": {
-                    "messages": "/usr/local/share/CodeVault/locales/",
-                    "logs": "/var/log/CodeVault/Example/",
+                    "messages": "/usr/local/share/CodeVault/Example/locales/",
+                    "logs": "/var/log/CodeVault/Example/logs/",
                 }
             },
             "locale": "en_US",
